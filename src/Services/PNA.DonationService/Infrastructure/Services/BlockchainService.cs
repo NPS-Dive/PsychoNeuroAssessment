@@ -6,23 +6,20 @@ namespace PNA.DonationService.Infrastructure.Services;
 
 public class BlockchainService : IBlockchainService
 {
-    private readonly Web3 _web3;
+    private readonly IWeb3 _web3;
+    private readonly IConfiguration _configuration;
 
-    public BlockchainService ( IConfiguration configuration )
+    public BlockchainService ( IConfiguration configuration, IWeb3 web3 )
     {
-        // Create the account
-        var privateKey = configuration["Ethereum:PrivateKey"];
-        var account = new Nethereum.Web3.Accounts.Account(privateKey);
-
-        // Pass the account to Web3 constructor
-        _web3 = new Web3(account, configuration["Ethereum:RpcUrl"]);
-        _web3.TransactionManager.UseLegacyAsDefault = true; // For compatibility
+        _configuration = configuration;
+        _web3 = web3;
     }
 
     public async Task<string> ProcessDonationAsync ( decimal amount, Guid userId )
     {
+        var recipientAddress = "0xSomeRecipientAddress"; // Replace with actual logic to determine recipient
         var tx = await _web3.Eth.GetEtherTransferService()
-            .TransferEtherAsync("RECEIVER_ADDRESS", amount); // Replace with actual receiver address
+            .TransferEtherAsync(recipientAddress, amount);
         return tx;
     }
 }
