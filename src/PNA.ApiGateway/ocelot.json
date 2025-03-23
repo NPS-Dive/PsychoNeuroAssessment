@@ -11,42 +11,6 @@
       ],
       "UpstreamPathTemplate": "/auth/{everything}",
       "UpstreamHttpMethod": [ "GET", "POST", "PUT" ]
-    },
-    {
-      "DownstreamPathTemplate": "/api/test/{everything}",
-      "DownstreamScheme": "http",
-      "DownstreamHostAndPorts": [
-        {
-          "Host": "localhost",
-          "Port": 5002
-        }
-      ],
-      "UpstreamPathTemplate": "/test/{everything}",
-      "UpstreamHttpMethod": [ "GET", "POST" ]
-    },
-    {
-      "DownstreamPathTemplate": "/api/donation/{everything}",
-      "DownstreamScheme": "http",
-      "DownstreamHostAndPorts": [
-        {
-          "Host": "localhost",
-          "Port": 5003
-        }
-      ],
-      "UpstreamPathTemplate": "/donation/{everything}",
-      "UpstreamHttpMethod": [ "GET", "POST" ]
-    },
-    {
-      "DownstreamPathTemplate": "/api/analysis/{everything}",
-      "DownstreamScheme": "http",
-      "DownstreamHostAndPorts": [
-        {
-          "Host": "localhost",
-          "Port": 5004
-        }
-      ],
-      "UpstreamPathTemplate": "/analysis/{everything}",
-      "UpstreamHttpMethod": [ "GET", "POST" ]
     }
   ],
   "GlobalConfiguration": {
