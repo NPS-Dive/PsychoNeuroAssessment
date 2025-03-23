@@ -1,26 +1,33 @@
-using Microsoft.AspNetCore.Builder;
-using Microsoft.Extensions.DependencyInjection;
+using Microsoft.OpenApi.Models;
 using Ocelot.DependencyInjection;
 using Ocelot.Middleware;
-using Prometheus;
-using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Logging
-builder.Host.UseSerilog(( ctx, lc ) => lc
-    .WriteTo.Console()
-    .WriteTo.Seq("http://seq:5341"));
+// Add logging for debugging
+builder.Services.AddLogging(logging => logging.AddConsole());
 
-// Ocelot
-builder.Services.AddOcelot();
+// Add Ocelot
+builder.Configuration.AddJsonFile("ocelot.json", optional: false, reloadOnChange: true);
+builder.Services.AddOcelot(builder.Configuration);
+
+// Add Swagger
+builder.Services.AddSwaggerGen(c =>
+{
+    c.SwaggerDoc("v1", new OpenApiInfo { Title = "API Gateway", Version = "v1" });
+});
 
 var app = builder.Build();
 
-// Pipeline
-app.UseSerilogRequestLogging();
-app.UseMetricServer();
-app.UseHttpMetrics();
-app.UseOcelot().Wait();
+// Enable Swagger
+app.UseSwagger();
+app.UseSwaggerUI(c =>
+{
+    c.SwaggerEndpoint("/swagger/v1/swagger.json", "API Gateway V1");
+    c.RoutePrefix = string.Empty; // Swagger at root (http://localhost:5000)
+});
+
+// Use Ocelot
+await app.UseOcelot();
 
 app.Run();
