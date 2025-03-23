@@ -1,0 +1,6 @@
+@PNA.AuthService_HostAddress = http://localhost:5088
+
+GET {{PNA.AuthService_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

@@ -1,0 +1,6 @@
+@PNA.TestService_HostAddress = http://localhost:5103
+
+GET {{PNA.TestService_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
