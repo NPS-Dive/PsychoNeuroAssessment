@@ -14,7 +14,7 @@ public class GetAllUsersQueryTests
     {
         // Arrange
         var userRepoMock = new Mock<IUserRepository>();
-        var users = new List<User> { new User("testuser", "hash", "test@example.com", DateTime.Now, Gender.Male, MaritalStatus.Single, null, JobStatus.FullTime, null, null, null) };
+        var users = new List<User> { new User("testuser", "hash", "test@example.com", DateTime.Now, Gender.Male, MaritalStatus.SingleNeverMarried, null, JobStatus.FullTime, null, null, null) };
         userRepoMock.Setup(x => x.GetAllAsync()).ReturnsAsync(users);
         var handler = new GetAllUsersQueryHandler(userRepoMock.Object);
         var query = new GetAllUsersQuery();

@@ -14,7 +14,7 @@ public class UpdateUserCommandTests
         // Arrange
         var userRepoMock = new Mock<IUserRepository>();
         var passwordHasherMock = new Mock<IPasswordHasher>();
-        var user = new User("testuser", "oldhash", "old@example.com", DateTime.Now, Gender.Male, MaritalStatus.Single, null, JobStatus.FullTime, null, null, null);
+        var user = new User("testuser", "oldhash", "old@example.com", DateTime.Now, Gender.Male, MaritalStatus.SingleNeverMarried, null, JobStatus.FullTime, null, null, null);
         userRepoMock.Setup(x => x.GetByIdAsync(user.Id)).ReturnsAsync(user);
         passwordHasherMock.Setup(x => x.HashPassword("newpassword")).Returns("newhash");
         var handler = new UpdateUserCommandHandler(userRepoMock.Object, passwordHasherMock.Object);

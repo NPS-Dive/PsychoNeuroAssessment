@@ -14,7 +14,7 @@ public class GetUserByIdQueryTests
     {
         // Arrange
         var userRepoMock = new Mock<IUserRepository>();
-        var user = new User("testuser", "hash", "test@example.com", DateTime.Now, Gender.Male, MaritalStatus.Single, null, JobStatus.FullTime, null, null, null);
+        var user = new User("testuser", "hash", "test@example.com", DateTime.Now, Gender.Male, MaritalStatus.SingleNeverMarried, null, JobStatus.FullTime, null, null, null);
         userRepoMock.Setup(x => x.GetByIdAsync(user.Id)).ReturnsAsync(user);
         var handler = new GetUserByIdQueryHandler(userRepoMock.Object);
         var query = new GetUserByIdQuery(user.Id);
