@@ -4,6 +4,12 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 VisualStudioVersion = 17.13.35828.75
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{02EA681E-C7D8-13C7-8484-4AC65E1B71E8}"
+	ProjectSection(SolutionItems) = preProject
+		docker-compose.yml = docker-compose.yml
+		C:\Users\Administrator\Desktop\Dockerfile = C:\Users\Administrator\Desktop\Dockerfile
+		prometheus.yml = prometheus.yml
+		README.md = README.md
+	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PNA.Core", "src\PNA.Core\PNA.Core.csproj", "{155F3740-036B-4138-ACA4-88683ED9D7AE}"
 EndProject
@@ -14,6 +20,23 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PNA.TestService", "src\Services\PNA.TestService\PNA.TestService.csproj", "{64B74C87-51E1-436E-8EBD-B64047C60619}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PNA.DonationService", "src\Services\PNA.DonationService\PNA.DonationService.csproj", "{FFD23815-B7EA-4A12-8406-B20DDBA6CBF1}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PNA.AnalysisService", "src\Services\PNA.AnalysisService\PNA.AnalysisService.csproj", "{1E384109-B543-45DA-B4B0-D1B7AF182A90}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PNA.ApiGateway", "src\PNA.ApiGateway\PNA.ApiGateway.csproj", "{15924D50-8613-48CF-86BF-2486DBEE4FA7}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PNA.BlazorWasm", "src\PNA.BlazorWasm\PNA.BlazorWasm.csproj", "{62678235-252B-4109-8026-25360A767B27}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PNA.BlazorServer", "src\PNA.BlazorServer\PNA.BlazorServer.csproj", "{0D3EDD2B-2995-4B4B-93BA-26D46BB774FE}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{A1B9A897-55C3-49E4-BD41-95947DFC5254}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AuthService.Tests", "tests\AuthService.Tests\AuthService.Tests.csproj", "{803905CC-A6A3-431F-8E8B-E092C58E0086}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SmartContracts", "SmartContracts", "{D23684E4-D8C4-491C-B809-E668A78604E0}"
+	ProjectSection(SolutionItems) = preProject
+		Donation.sol = Donation.sol
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -37,6 +60,26 @@ Global
 		{FFD23815-B7EA-4A12-8406-B20DDBA6CBF1}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{FFD23815-B7EA-4A12-8406-B20DDBA6CBF1}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{FFD23815-B7EA-4A12-8406-B20DDBA6CBF1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1E384109-B543-45DA-B4B0-D1B7AF182A90}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1E384109-B543-45DA-B4B0-D1B7AF182A90}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1E384109-B543-45DA-B4B0-D1B7AF182A90}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1E384109-B543-45DA-B4B0-D1B7AF182A90}.Release|Any CPU.Build.0 = Release|Any CPU
+		{15924D50-8613-48CF-86BF-2486DBEE4FA7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{15924D50-8613-48CF-86BF-2486DBEE4FA7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{15924D50-8613-48CF-86BF-2486DBEE4FA7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{15924D50-8613-48CF-86BF-2486DBEE4FA7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{62678235-252B-4109-8026-25360A767B27}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{62678235-252B-4109-8026-25360A767B27}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{62678235-252B-4109-8026-25360A767B27}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{62678235-252B-4109-8026-25360A767B27}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0D3EDD2B-2995-4B4B-93BA-26D46BB774FE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0D3EDD2B-2995-4B4B-93BA-26D46BB774FE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0D3EDD2B-2995-4B4B-93BA-26D46BB774FE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0D3EDD2B-2995-4B4B-93BA-26D46BB774FE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{803905CC-A6A3-431F-8E8B-E092C58E0086}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{803905CC-A6A3-431F-8E8B-E092C58E0086}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{803905CC-A6A3-431F-8E8B-E092C58E0086}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{803905CC-A6A3-431F-8E8B-E092C58E0086}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -47,6 +90,13 @@ Global
 		{A5B5505C-D1D7-48BD-9941-1BD3B23BDC9A} = {7B01307E-6B1E-4677-9B93-2CBB11DDA8E9}
 		{64B74C87-51E1-436E-8EBD-B64047C60619} = {7B01307E-6B1E-4677-9B93-2CBB11DDA8E9}
 		{FFD23815-B7EA-4A12-8406-B20DDBA6CBF1} = {7B01307E-6B1E-4677-9B93-2CBB11DDA8E9}
+		{1E384109-B543-45DA-B4B0-D1B7AF182A90} = {7B01307E-6B1E-4677-9B93-2CBB11DDA8E9}
+		{15924D50-8613-48CF-86BF-2486DBEE4FA7} = {02EA681E-C7D8-13C7-8484-4AC65E1B71E8}
+		{62678235-252B-4109-8026-25360A767B27} = {02EA681E-C7D8-13C7-8484-4AC65E1B71E8}
+		{0D3EDD2B-2995-4B4B-93BA-26D46BB774FE} = {02EA681E-C7D8-13C7-8484-4AC65E1B71E8}
+		{A1B9A897-55C3-49E4-BD41-95947DFC5254} = {02EA681E-C7D8-13C7-8484-4AC65E1B71E8}
+		{803905CC-A6A3-431F-8E8B-E092C58E0086} = {A1B9A897-55C3-49E4-BD41-95947DFC5254}
+		{D23684E4-D8C4-491C-B809-E668A78604E0} = {02EA681E-C7D8-13C7-8484-4AC65E1B71E8}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {E0835E4F-648B-4BA8-8C71-20726A4D89CA}

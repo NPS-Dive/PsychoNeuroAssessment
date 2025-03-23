@@ -1,0 +1,111 @@
+version: '3.8'
+services:
+  auth-service:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    command: ["dotnet", "AuthService.dll"]
+    ports:
+      - "5001:80"
+    depends_on:
+      - mongodb
+      - redis
+      - rabbitmq
+
+  test-service:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    command: ["dotnet", "TestService.dll"]
+    ports:
+      - "5002:80"
+    depends_on:
+      - mongodb
+      - redis
+      - rabbitmq
+
+  donation-service:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    command: ["dotnet", "DonationService.dll"]
+    ports:
+      - "5003:80"
+    depends_on:
+      - mongodb
+      - redis
+      - rabbitmq
+
+  analysis-service:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    command: ["dotnet", "AnalysisService.dll"]
+    ports:
+      - "5004:80"
+    depends_on:
+      - redis
+      - rabbitmq
+
+  api-gateway:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    command: ["dotnet", "ApiGateway.dll"]
+    ports:
+      - "5000:80"
+    depends_on:
+      - auth-service
+      - test-service
+      - donation-service
+      - analysis-service
+
+  blazor-wasm:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    command: ["dotnet", "BlazorWasm.dll"]
+    ports:
+      - "5005:80"
+    depends_on:
+      - api-gateway
+
+  blazor-server:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    command: ["dotnet", "BlazorServer.dll"]
+    ports:
+      - "5006:80"
+    depends_on:
+      - api-gateway
+
+  mongodb:
+    image: mongo:latest
+    ports:
+      - "27017:27017"
+
+  redis:
+    image: redis:latest
+    ports:
+      - "6379:6379"
+
+  rabbitmq:
+    image: rabbitmq:3-management
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+
+  seq:
+    image: datalust/seq:latest
+    ports:
+      - "5341:80"
+    environment:
+      - ACCEPT_EULA=Y
+
+  prometheus:
+    image: prom/prometheus:latest
+    volumes:
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml
+    ports:
+      - "9090:9090"
