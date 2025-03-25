@@ -8,6 +8,7 @@ public class User : IdentityUser<Guid>
     public string LastName { get; private set; }
     public DateTime CreatedAt { get; private set; } = DateTime.UtcNow;
     public DateTime? UpdatedAt { get; private set; }
+    public IList<string> Roles { get; set; } = new List<string>(); // For MongoDB
 
     public User ( string userName, string email, string firstName, string lastName ) : base(userName)
     {
@@ -16,7 +17,10 @@ public class User : IdentityUser<Guid>
         LastName = lastName;
     }
 
-    private User () { }
+    private User()
+    {
+
+    }
 
     public void Update ( string firstName, string lastName )
     {

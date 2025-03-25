@@ -12,7 +12,7 @@ public class MongoUserRepository : IUserRepository
     {
         var client = new MongoClient(configuration["MongoDB:ConnectionString"]);
         var database = client.GetDatabase(configuration["MongoDB:Database"]);
-        _users = database.GetCollection<User>("User");
+        _users = database.GetCollection<User>("Users");
     }
 
     public async Task<User> AddAsync ( User entity )
@@ -21,15 +21,14 @@ public class MongoUserRepository : IUserRepository
         return entity;
     }
 
-    public async Task<User?> GetByIdAsync ( Guid id )
-    {
-        return await _users.Find(u => u.Id == id).FirstOrDefaultAsync();
-    }
+    public async Task<User?> GetByIdAsync ( Guid id ) =>
+        await _users.Find(u => u.Id == id).FirstOrDefaultAsync();
 
-    public async Task<User?> FindByEmailAsync ( string email )
-    {
-        return await _users.Find(u => u.Email == email).FirstOrDefaultAsync();
-    }
+    public async Task<User?> FindByEmailAsync ( string email ) =>
+        await _users.Find(u => u.Email == email).FirstOrDefaultAsync();
+
+    public async Task<IReadOnlyList<User>> GetAllAsync () =>
+        await _users.Find(_ => true).ToListAsync().ContinueWith(t => t.Result.AsReadOnly());
 
     public async Task UpdateAsync ( User entity )
     {

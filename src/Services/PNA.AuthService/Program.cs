@@ -46,13 +46,22 @@ builder.Services.AddMassTransit(x =>
 builder.Services.AddDbContext<AuthDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
-// Identity setup with SQL Server
-builder.Services.AddIdentity<User, IdentityRole<Guid>>()
+// Identity setup with SQL Server  with enhanced options
+builder.Services.AddIdentity<User, IdentityRole<Guid>>(options =>
+    {
+        options.Password.RequireDigit = true;
+        options.Password.RequiredLength = 8;
+        options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(5);
+        options.Lockout.MaxFailedAccessAttempts = 5;
+        options.Lockout.AllowedForNewUsers = true;
+        options.User.RequireUniqueEmail = true;
+    })
     .AddEntityFrameworkStores<AuthDbContext>()
     .AddDefaultTokenProviders()
     .AddSignInManager();
 
-// JWT Authentication
+// JWT Authentication with stronger key
+var jwtKey = builder.Configuration["Jwt:Key"] ?? Convert.ToBase64String(Guid.NewGuid().ToByteArray()); // Fallback if not set
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>
     {
@@ -64,9 +73,17 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             ValidateIssuerSigningKey = true,
             ValidIssuer = builder.Configuration["Jwt:Issuer"],
             ValidAudience = builder.Configuration["Jwt:Audience"],
-            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"]))
+            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtKey.PadRight(32, '0'))) // Ensure 256-bit
         };
     });
+
+
+// Authorization policies
+builder.Services.AddAuthorization(options =>
+{
+    options.AddPolicy("AdminOnly", policy => policy.RequireRole("Admin"));
+    options.AddPolicy("UserOrAdmin", policy => policy.RequireRole("User", "Admin"));
+});
 
 // CQRS with MediatR, using MongoDB for IUserRepository
 builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof(Program).Assembly));
@@ -77,21 +94,14 @@ var app = builder.Build();
 using (var scope = app.Services.CreateScope())
 {
     var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole<Guid>>>();
-    string[] roles = ["User", "Admin"];
-    foreach (var role in roles)
-    {
-        if (!await roleManager.RoleExistsAsync(role))
-        {
-            await roleManager.CreateAsync(new IdentityRole<Guid> { Name = role, NormalizedName = role.ToUpper() });
-        }
-    }
+    await SeedRolesAsync(roleManager);
 }
-
 
 // Middleware Pipeline
 app.UseSerilogRequestLogging();
 app.UseSwagger();
 app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "Auth API v1"));
+//app.UseHttpsRedirection(); // Enforce HTTPS
 app.UseRouting();
 app.UseAuthentication();
 app.UseAuthorization();
@@ -100,3 +110,16 @@ app.UseHttpMetrics(); // Collects HTTP metrics
 app.UseEndpoints(endpoints => endpoints.MapControllers());
 
 app.Run();
+
+
+static async Task SeedRolesAsync ( RoleManager<IdentityRole<Guid>> roleManager )
+{
+    string[] roles = { "Users", "Admin" };
+    foreach (var role in roles)
+    {
+        if (!await roleManager.RoleExistsAsync(role))
+        {
+            await roleManager.CreateAsync(new IdentityRole<Guid> { Name = role, NormalizedName = role.ToUpper() });
+        }
+    }
+}
