@@ -4,6 +4,5 @@ namespace PNA.Core.Interfaces;
 
 public interface IUserRepository : IBaseRepository<User>
 {
-    Task<User?> GetByUsernameAsync ( string username );
-    Task<List<User>> GetAllAsync ();
+    Task<User?> FindByEmailAsync ( string email );
 }

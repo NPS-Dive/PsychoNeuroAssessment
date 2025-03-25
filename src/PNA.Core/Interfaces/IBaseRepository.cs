@@ -2,9 +2,10 @@
 
 namespace PNA.Core.Interfaces;
 
-public interface IBaseRepository<T> where T : BaseEntity
+public interface IBaseRepository<TEntity>
 {
-    Task AddAsync ( T entity );
-    Task<T?> GetByIdAsync ( Guid id );
-    Task UpdateAsync ( T entity );
+    Task<TEntity> AddAsync ( TEntity entity );
+    Task<TEntity?> GetByIdAsync ( Guid id );
+    Task UpdateAsync ( TEntity entity );
+    Task DeleteAsync ( Guid id );
 }

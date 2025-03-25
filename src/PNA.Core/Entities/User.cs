@@ -1,36 +1,27 @@
-﻿using PNA.Core.Enums;
-using PNA.Core.ValueObjects;
+﻿using Microsoft.AspNetCore.Identity;
 
 namespace PNA.Core.Entities;
 
-public class User : BaseEntity
+public class User : IdentityUser<Guid>
 {
-    public string Username { get; set; }
-    public string PasswordHash { get; set; }
-    public string Email { get; set; }
-    public DateTime DateOfBirth { get; set; }
-    public Gender Gender { get; set; }
-    public MaritalStatus MaritalStatus { get; set; }
-    public Address? Address { get; set; }
-    public JobStatus JobStatus { get; set; }
-    public Cellphone? Cellphone { get; set; }
-    public string? ImageUrl { get; set; }
-    public DateTime? LastLogin { get; set; }
+    public string FirstName { get; private set; }
+    public string LastName { get; private set; }
+    public DateTime CreatedAt { get; private set; } = DateTime.UtcNow;
+    public DateTime? UpdatedAt { get; private set; }
 
-    public User ( string username, string passwordHash, string email, DateTime dateOfBirth,
-        Gender gender, MaritalStatus maritalStatus, Address? address, JobStatus jobStatus,
-        Cellphone? cellphone, string? imageUrl, DateTime? lastLogin )
+    public User ( string userName, string email, string firstName, string lastName ) : base(userName)
     {
-        Username = username;
-        PasswordHash = passwordHash;
         Email = email;
-        DateOfBirth = dateOfBirth;
-        Gender = gender;
-        MaritalStatus = maritalStatus;
-        Address = address;
-        JobStatus = jobStatus;
-        Cellphone = cellphone;
-        ImageUrl = imageUrl;
-        LastLogin = lastLogin;
+        FirstName = firstName;
+        LastName = lastName;
+    }
+
+    private User () { }
+
+    public void Update ( string firstName, string lastName )
+    {
+        FirstName = firstName;
+        LastName = lastName;
+        UpdatedAt = DateTime.UtcNow;
     }
 }
