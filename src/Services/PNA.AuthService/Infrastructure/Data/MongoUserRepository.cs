@@ -12,7 +12,7 @@ public class MongoUserRepository : IUserRepository
     {
         var client = new MongoClient(configuration["MongoDB:ConnectionString"]);
         var database = client.GetDatabase(configuration["MongoDB:Database"]);
-        _users = database.GetCollection<User>("Users");
+        _users = database.GetCollection<User>("User");
     }
 
     public async Task<User> AddAsync ( User entity )
@@ -33,7 +33,7 @@ public class MongoUserRepository : IUserRepository
 
     public async Task UpdateAsync ( User entity )
     {
-        entity.Update(entity.FirstName, entity.LastName); // Updates UpdatedAt
+        entity.Update(entity.FirstName, entity.LastName);
         await _users.ReplaceOneAsync(u => u.Id == entity.Id, entity);
     }
 

@@ -11,6 +11,8 @@ public class RegisterCommand : IRequest<Guid>
     public string LastName { get; set; }
     public string Role { get; set; }
 
+    private static readonly string[] AllowedRoles = ["User", "Admin"];
+
     public RegisterCommand ( string userName, string email, string password, string firstName, string lastName, string role )
     {
         UserName = userName;
@@ -18,6 +20,6 @@ public class RegisterCommand : IRequest<Guid>
         Password = password;
         FirstName = firstName;
         LastName = lastName;
-        Role = role;
+        Role = AllowedRoles.Contains(role) ? role : throw new ArgumentException($"Role must be one of: {string.Join(", ", AllowedRoles)}");
     }
 }
