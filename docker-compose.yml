@@ -1,16 +1,13 @@
 version: '3.8'
 services:
-  auth-service:
-    build:
-      context: .
-      dockerfile: Dockerfile
-    command: ["dotnet", "AuthService.dll"]
+  authservice:
+    build: ./Services/AuthService
     ports:
       - "5001:80"
     depends_on:
       - mongodb
-      - redis
-      - rabbitmq
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
 
   test-service:
     build:
@@ -47,11 +44,8 @@ services:
       - redis
       - rabbitmq
 
-  api-gateway:
-    build:
-      context: .
-      dockerfile: Dockerfile
-    command: ["dotnet", "ApiGateway.dll"]
+  apigateway:
+    build: ./Services/ApiGateway
     ports:
       - "5000:80"
     depends_on:
@@ -84,6 +78,9 @@ services:
     image: mongo:latest
     ports:
       - "27017:27017"
+    volumes:
+      - mongo-data:/data/db
+
 
   redis:
     image: redis:latest

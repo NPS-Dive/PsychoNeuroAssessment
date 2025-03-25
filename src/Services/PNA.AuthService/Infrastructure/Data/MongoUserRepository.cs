@@ -15,9 +15,10 @@ public class MongoUserRepository : IUserRepository
         _users = database.GetCollection<User>("Users");
     }
 
-    public async Task AddAsync ( User user )
+    public async Task<User> AddAsync ( User entity )
     {
-        await _users.InsertOneAsync(user);
+        await _users.InsertOneAsync(entity);
+        return entity;
     }
 
     public async Task<User?> GetByIdAsync ( Guid id )
@@ -25,18 +26,19 @@ public class MongoUserRepository : IUserRepository
         return await _users.Find(u => u.Id == id).FirstOrDefaultAsync();
     }
 
-    public async Task<User?> GetByUsernameAsync ( string username )
+    public async Task<User?> FindByEmailAsync ( string email )
     {
-        return await _users.Find(u => u.Username == username).FirstOrDefaultAsync();
+        return await _users.Find(u => u.Email == email).FirstOrDefaultAsync();
     }
 
-    public async Task<List<User>> GetAllAsync ()
+    public async Task UpdateAsync ( User entity )
     {
-        return await _users.Find(_ => true).ToListAsync();
+        entity.Update(entity.FirstName, entity.LastName); // Updates UpdatedAt
+        await _users.ReplaceOneAsync(u => u.Id == entity.Id, entity);
     }
 
-    public async Task UpdateAsync ( User user )
+    public async Task DeleteAsync ( Guid id )
     {
-        await _users.ReplaceOneAsync(u => u.Id == user.Id, user);
+        await _users.DeleteOneAsync(u => u.Id == id);
     }
 }

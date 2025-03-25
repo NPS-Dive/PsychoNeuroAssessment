@@ -42,11 +42,11 @@ builder.Services.AddMassTransit(x =>
     x.UsingRabbitMq(( context, cfg ) => cfg.Host(builder.Configuration["RabbitMQ:Host"]));
 });
 
-// EF Core with SQL Server
+// EF Core with SQL Server for Identity
 builder.Services.AddDbContext<AuthDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
-// Identity setup
+// Identity setup with SQL Server
 builder.Services.AddIdentity<User, IdentityRole<Guid>>()
     .AddEntityFrameworkStores<AuthDbContext>()
     .AddDefaultTokenProviders()
@@ -68,10 +68,9 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
         };
     });
 
-// CQRS with MediatR
+// CQRS with MediatR, using MongoDB for IUserRepository
 builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof(Program).Assembly));
-builder.Services.AddScoped<IUserRepository, SqlUserRepository>();
-
+builder.Services.AddScoped<IUserRepository, MongoUserRepository>();
 var app = builder.Build();
 
 // Middleware Pipeline
