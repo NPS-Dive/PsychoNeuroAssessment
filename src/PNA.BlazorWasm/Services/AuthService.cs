@@ -44,23 +44,19 @@ public class AuthService : IAuthService
         return users?.AsReadOnly() ?? throw new InvalidOperationException("Failed to fetch users");
         }
 
-    public async Task<UserDto> GetUserAsync ( Guid id )
-        {
-        var user = await _httpClient.GetFromJsonAsync<UserDto>($"/auth/users/{id}");
-        return user ?? throw new InvalidOperationException("Failed to fetch user");
-        }
+        public async Task<UserDto> GetUserAsync ( Guid id ) 
+            => await _httpClient.GetFromJsonAsync<UserDto>($"/auth/users/{id}") 
+               ?? throw new InvalidOperationException("Failed to fetch user");
 
-    public async Task DeleteUserAsync ( Guid id )
-        {
-        var response = await _httpClient.DeleteAsync($"/auth/users/{id}");
-        response.EnsureSuccessStatusCode();
-        }
+        public async Task DeleteUserAsync ( Guid id ) 
+            => await _httpClient
+                .DeleteAsync($"/auth/users/{id}")
+                .ContinueWith(t => t.Result.EnsureSuccessStatusCode());
 
-    public async Task UpdateUserRoleAsync ( Guid id, string role )
-        {
-        var response = await _httpClient.PutAsJsonAsync($"/auth/users/{id}/role", $"\"{role}\""); // JSON string
-        response.EnsureSuccessStatusCode();
-        }
+        public async Task UpdateUserRoleAsync ( Guid id, string role ) 
+            => await _httpClient
+                .PutAsJsonAsync($"/auth/users/{id}/role", $"\"{role}\"")
+                .ContinueWith(t => t.Result.EnsureSuccessStatusCode());
 
     public async Task RegisterAsync ( string userName, string email, string password, string firstName, string lastName, string role )
         {
