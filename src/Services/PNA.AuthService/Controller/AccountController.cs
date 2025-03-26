@@ -76,6 +76,39 @@ namespace PNA.AuthService.Controller
             return Ok(users.Select(BuildUserResponse));
             }
 
+        [HttpGet("users/{id}")]
+        [Authorize(Policy = "AdminOnly")]
+        public async Task<IActionResult> GetUser ( Guid id )
+            {
+            var user = await _mediator.Send(new GetUserQuery(id));
+            return Ok(BuildUserResponse(user));
+            }
+
+        [HttpDelete("users/{id}")]
+        [Authorize(Policy = "AdminOnly")]
+        public async Task<IActionResult> DeleteUser ( Guid id )
+            {
+            var user = await _userManager.FindByIdAsync(id.ToString());
+            if (user == null) return NotFound();
+            await _userManager.DeleteAsync(user);
+            await _mediator.Send(new GetUserQuery(id)); // Sync delete to MongoDB
+            return NoContent();
+            }
+
+        [HttpPut("users/{id}/role")]
+        [Authorize(Policy = "AdminOnly")]
+        public async Task<IActionResult> UpdateUserRole ( Guid id, [FromBody] string newRole )
+            {
+            var user = await _userManager.FindByIdAsync(id.ToString());
+            if (user == null) return NotFound();
+            var currentRoles = await _userManager.GetRolesAsync(user);
+            await _userManager.RemoveFromRolesAsync(user, currentRoles);
+            await _userManager.AddToRoleAsync(user, newRole);
+            user.Roles = (await _userManager.GetRolesAsync(user)).ToList();
+            await _mediator.Send(new GetUserQuery(id)); // Sync to MongoDB
+            return Ok();
+            }
+
         private static object BuildUserResponse ( User user ) =>
             new { user.UserName, user.Email, user.FirstName, user.LastName, user.Roles };
         }

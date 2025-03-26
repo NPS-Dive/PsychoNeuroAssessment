@@ -1,0 +1,16 @@
+﻿<div class="nav-menu">
+    <AuthorizeView Policy="UserOrAdmin">
+        <Authorized>
+            <NavLink class="nav-link" href="/userprofile">
+                User Profile
+            </NavLink>
+        </Authorized>
+    </AuthorizeView>
+    <AuthorizeView Policy="AdminOnly">
+        <Authorized>
+            <NavLink class="nav-link" href="/adminprofile">
+                Admin Profile
+            </NavLink>
+        </Authorized>
+    </AuthorizeView>
+</div>

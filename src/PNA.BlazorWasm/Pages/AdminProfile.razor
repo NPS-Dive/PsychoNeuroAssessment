@@ -1,0 +1,125 @@
+﻿@page "/adminprofile"
+@attribute [Authorize(Policy = "AdminOnly")]
+@inject IAuthService AuthService
+@inject NavigationManager Navigation
+
+<h3>Admin Profile</h3>
+
+@if (users == null)
+{
+    <p>Loading...</p>
+}
+else
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Username</th>
+                <th>Email</th>
+                <th>First Name</th>
+                <th>Last Name</th>
+                <th>Roles</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var user in users)
+            {
+                <tr>
+                    <td>@user.UserName</td>
+                    <td>@user.Email</td>
+                    <td>@user.FirstName</td>
+                    <td>@user.LastName</td>
+                    <td>
+                        <select @bind="user.Roles[0]" @onchange="@(e => UpdateRole(user, e.Value.ToString()))">
+                            <option value="Users">Users</option>
+                            <option value="Admin">Admin</option>
+                        </select>
+                    </td>
+                    <td>
+                        <button class="btn btn-danger" @onclick="() => DeleteUser(user)">Delete</button>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+    <button class="btn btn-secondary" @onclick="Logout">Logout</button>
+}
+
+<h4>Add New User</h4>
+<EditForm Model="newUser" OnValidSubmit="HandleRegister">
+    <DataAnnotationsValidator />
+    <div class="form-group">
+        <label>Username</label>
+        <InputText class="form-control" @bind-Value="newUser.UserName" />
+    </div>
+    <div class="form-group">
+        <label>Email</label>
+        <InputText class="form-control" @bind-Value="newUser.Email" />
+    </div>
+    <div class="form-group">
+        <label>Password</label>
+        <InputText class="form-control" type="password" @bind-Value="newUser.Password" />
+    </div>
+    <div class="form-group">
+        <label>First Name</label>
+        <InputText class="form-control" @bind-Value="newUser.FirstName" />
+    </div>
+    <div class="form-group">
+        <label>Last Name</label>
+        <InputText class="form-control" @bind-Value="newUser.LastName" />
+    </div>
+    <div class="form-group">
+        <label>Role</label>
+        <InputSelect class="form-control" @bind-Value="newUser.Role">
+            <option value="Users">Users</option>
+            <option value="Admin">Admin</option>
+        </InputSelect>
+    </div>
+    <button type="submit" class="btn btn-primary">Register</button>
+</EditForm>
+
+@code {
+    private IReadOnlyList<UserDto>? users;
+    private NewUserModel newUser = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        users = await AuthService.ListUsersAsync();
+    }
+
+    private async Task HandleRegister()
+    {
+        await AuthService.RegisterAsync(newUser.UserName, newUser.Email, newUser.Password, newUser.FirstName, newUser.LastName, newUser.Role);
+        users = await AuthService.ListUsersAsync();
+        newUser = new();
+    }
+
+    private async Task UpdateRole(UserDto user, string newRole)
+    {
+        await AuthService.UpdateUserRoleAsync(user.Id, newRole);
+        users = await AuthService.ListUsersAsync();
+    }
+
+    private async Task DeleteUser(UserDto user)
+    {
+        await AuthService.DeleteUserAsync(user.Id);
+        users = await AuthService.ListUsersAsync();
+    }
+
+    private async Task Logout()
+    {
+        await AuthService.LogoutAsync();
+        Navigation.NavigateTo("/login");
+    }
+
+    private class NewUserModel
+    {
+        public string UserName { get; set; } = string.Empty;
+        public string Email { get; set; } = string.Empty;
+        public string Password { get; set; } = string.Empty;
+        public string FirstName { get; set; } = string.Empty;
+        public string LastName { get; set; } = string.Empty;
+        public string Role { get; set; } = "Users";
+    }
+}
